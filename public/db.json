@@ -1,0 +1,6 @@
+{
+    "patients": [
+      { "id": 1, "name": "Juan Perez", "age": 35, "diagnosis": "Hipertensión" }
+    ]
+  }
+  
