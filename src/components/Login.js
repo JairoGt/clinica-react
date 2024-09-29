@@ -6,7 +6,7 @@ function Login({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Manejo del inicio de sesión
+    // Manejo del inicio de sesión y autenticacion
     onLogin();
   };
 

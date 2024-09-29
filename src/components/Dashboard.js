@@ -17,7 +17,7 @@ function Dashboard() {
 
   const fetchPacientes = async () => {
     try {
-      // Simulación de datos
+      // Simulación de datos aqui se puede hacer la llamada a la API
       setPacientes([
         { id: 1, nombre: 'Juan Pérez', edad: 35, medicoAsignado: 'Dr. García', diagnostico: 'Gripe' },
         { id: 2, nombre: 'María García', edad: 28, medicoAsignado: 'Dra. López', diagnostico: 'Migraña' },
@@ -29,7 +29,7 @@ function Dashboard() {
 
   const fetchMedicos = async () => {
     try {
-      // Simulación de datos de médicos
+      // Simulación de datos de médicos aqui se puede hacer la llamada a la API para cargar listado
       setMedicos([
         { id: 1, nombre: 'Dr. García' },
         { id: 2, nombre: 'Dra. López' },
@@ -40,7 +40,7 @@ function Dashboard() {
       console.error('Error al obtener médicos:', error);
     }
   };
-
+//Se agrego sweetalert2 para mostrar mensajes de alerta para cada accion realizada en el dashboard Agregar, Modificar y Eliminar
   const showAlert = (title, icon) => {
     Swal.fire({
       title: title,
