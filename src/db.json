@@ -1,0 +1,49 @@
+{
+  "pacientes": [
+    {
+      "id": "2",
+      "nombre": "Jairo",
+      "apellido": "cruz",
+      "fechaNacimiento": "2024-10-05",
+      "genero": "Masculino",
+      "direccion": "san jose pinula ciudad",
+      "telefono": "30563000",
+      "correo": "f@g.com",
+      "historialMedico": "d"
+    },
+    {
+      "id": "3",
+      "nombre": "Web php",
+      "apellido": "e",
+      "fechaNacimiento": "2024-10-05",
+      "genero": "Masculino",
+      "direccion": "e",
+      "telefono": "ef",
+      "correo": "f@g.com",
+      "historialMedico": "f"
+    },
+    {
+      "id": "4",
+      "nombre": "Web php",
+      "apellido": "e",
+      "fechaNacimiento": "2024-10-06",
+      "genero": "Masculino",
+      "direccion": "e",
+      "telefono": "ef",
+      "correo": "f@g.com",
+      "historialMedico": "dsss"
+    }
+  ],
+  "citas": [
+    {
+      "id": "2",
+      "paciente": {
+        "id": 4,
+        "nombre": "Web php",
+        "apellido": "e"
+      },
+      "fechaCita": "2024-10-06T06:58",
+      "motivo": "frf"
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PacienteForm from './PacienteForm';
 
-function PacienteList({ pacientes, onUpdate, onDelete, medicos }) {
+function PacienteList({ pacientes, onUpdate, onDelete }) {
   const [editingId, setEditingId] = useState(null);
 
   return (
@@ -9,27 +9,31 @@ function PacienteList({ pacientes, onUpdate, onDelete, medicos }) {
       <table className="min-w-full divide-y divide-gray-200 divide-opacity-25">
         <thead className="bg-white bg-opacity-20">
           <tr>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">ID</th>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Nombre</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Edad</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Médico Asignado</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Diagnóstico</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Apellido</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Fecha de Nacimiento</th>
+            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Correo</th>
             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Acciones</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-200 divide-opacity-25">
+        <tbody className="bg-white bg-opacity-10 divide-y divide-gray-200 divide-opacity-25">
           {pacientes.map(paciente => (
             <tr key={paciente.id}>
+              <td className="px-6 py-4 whitespace-nowrap">
+                <div className="text-sm font-medium text-white">{paciente.id}</div>
+              </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <div className="text-sm font-medium text-white">{paciente.nombre}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-white">{paciente.edad}</div>
+                <div className="text-sm text-white">{paciente.apellido}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-white">{paciente.medicoAsignado}</div>
+                <div className="text-sm text-white">{paciente.fechaNacimiento}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-white">{paciente.diagnostico}</div>
+                <div className="text-sm text-white">{paciente.correo}</div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <button 
@@ -58,7 +62,6 @@ function PacienteList({ pacientes, onUpdate, onDelete, medicos }) {
               onUpdate(editingId, updatedPaciente);
               setEditingId(null);
             }}
-            medicos={medicos}
           />
         </div>
       )}

@@ -1,0 +1,7 @@
+{
+  "port": 8080,
+  "watch": false,
+  "delay": 1000,
+  "quiet": false,
+  "static": "public"
+}

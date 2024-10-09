@@ -1,46 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
+import axios from 'axios';
 import PacienteForm from './PacienteForm';
 import PacienteList from './PacienteList';
+import CitaForm from './CitaForm';
+import Modal from './Modal';
 import Swal from 'sweetalert2';
+import CitaList from './CitaList';
+import useCache from './useCache';
 
 function Dashboard() {
-  const [pacientes, setPacientes] = useState([]);
-  const [isFormVisible, setIsFormVisible] = useState(false);
-  const [medicos, setMedicos] = useState([]);
+  const [isPacienteModalOpen, setIsPacienteModalOpen] = useState(false);
+  const [isCitaModalOpen, setIsCitaModalOpen] = useState(false);
+  const API_URL = 'http://localhost:8080'; 
+
+  const fetchPacientes = useCallback(() => axios.get(`${API_URL}/pacientes`).then(res => res.data), [API_URL]);
+  const fetchCitas = useCallback(() => axios.get(`${API_URL}/citas`).then(res => res.data), [API_URL]);
+
+  const { data: pacientes, loading: loadingPacientes, error: errorPacientes, refetch: refetchPacientes } = useCache('pacientes', fetchPacientes);
+  const { data: citas, loading: loadingCitas, error: errorCitas, refetch: refetchCitas } = useCache('citas', fetchCitas);
 
 
-
-  useEffect(() => {
-    fetchPacientes();
-    fetchMedicos();
-  }, []);
-
-  const fetchPacientes = async () => {
-    try {
-      // Simulación de datos aqui se puede hacer la llamada a la API
-      setPacientes([
-        { id: 1, nombre: 'Juan Pérez', edad: 35, medicoAsignado: 'Dr. García', diagnostico: 'Gripe' },
-        { id: 2, nombre: 'María García', edad: 28, medicoAsignado: 'Dra. López', diagnostico: 'Migraña' },
-      ]);
-    } catch (error) {
-      console.error('Error al obtener pacientes:', error);
-    }
-  };
-
-  const fetchMedicos = async () => {
-    try {
-      // Simulación de datos de médicos aqui se puede hacer la llamada a la API para cargar listado
-      setMedicos([
-        { id: 1, nombre: 'Dr. García' },
-        { id: 2, nombre: 'Dra. López' },
-        { id: 3, nombre: 'Dr. Martínez' },
-        { id: 4, nombre: 'Dra. Rodríguez' },
-      ]);
-    } catch (error) {
-      console.error('Error al obtener médicos:', error);
-    }
-  };
-//Se agrego sweetalert2 para mostrar mensajes de alerta para cada accion realizada en el dashboard Agregar, Modificar y Eliminar
   const showAlert = (title, icon) => {
     Swal.fire({
       title: title,
@@ -53,10 +32,12 @@ function Dashboard() {
     });
   };
 
-  const addPaciente = async (paciente) => {
+  const addPaciente = async (pacienteData) => {
     try {
-      setPacientes([...pacientes, { ...paciente, id: Date.now() }]);
-      setIsFormVisible(false);
+      const newId = pacientes.length > 0 ? Math.max(...pacientes.map(p => p.id)) + 1 : 1;
+      const newPaciente = { ...pacienteData, id: newId };
+      await axios.post(`${API_URL}/pacientes`, newPaciente);
+      refetchPacientes();
       showAlert('Paciente agregado exitosamente', 'success');
     } catch (error) {
       console.error('Error al agregar paciente:', error);
@@ -66,17 +47,19 @@ function Dashboard() {
 
   const updatePaciente = async (id, updatedPaciente) => {
     try {
-      setPacientes(pacientes.map(p => p.id === id ? { ...updatedPaciente, id } : p));
+      await axios.put(`${API_URL}/pacientes/${id}`, updatedPaciente);
+      await refetchPacientes();
       showAlert('Paciente modificado exitosamente', 'success');
     } catch (error) {
       console.error('Error al actualizar paciente:', error);
-      showAlert('Error al modificar paciente', 'error');
+      showAlert('Error al modificar paciente. Verifica la conexión con el servidor.', 'error');
     }
   };
 
+
   const deletePaciente = async (id) => {
     try {
-      Swal.fire({
+      const result = await Swal.fire({
         title: '¿Estás seguro?',
         text: "No podrás revertir esta acción",
         icon: 'warning',
@@ -85,40 +68,124 @@ function Dashboard() {
         cancelButtonColor: '#d33',
         confirmButtonText: 'Sí, eliminar',
         cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          setPacientes(pacientes.filter(p => p.id !== id));
-          showAlert('Paciente eliminado exitosamente', 'success');
-        }
       });
+  
+      if (result.isConfirmed) {
+        await axios.delete(`${API_URL}/pacientes/${id}`);
+        refetchPacientes();
+        showAlert('Paciente eliminado exitosamente', 'success');
+      }
     } catch (error) {
       console.error('Error al eliminar paciente:', error);
-      showAlert('Error al eliminar paciente', 'error');
+      showAlert('Error al eliminar paciente. Verifica la conexión con el servidor.', 'error');
     }
   };
 
+  const addCita = async (citaData) => {
+    try {
+      const newId = citas.length > 0 ? Math.max(...citas.map(c => c.id)) + 1 : 1;
+      const newCita = { ...citaData, id: newId };
+      await axios.post(`${API_URL}/citas`, newCita);
+      refetchCitas();
+      showAlert('Cita agregada exitosamente', 'success');
+    } catch (error) {
+      console.error('Error al agregar cita:', error);
+      showAlert('Error al agregar cita', 'error');
+    }
+  };
+
+  const updateCita = async (id, updatedCita) => {
+    try {
+      await axios.put(`${API_URL}/citas/${id}`, updatedCita);
+      refetchCitas();
+      showAlert('Cita modificada exitosamente', 'success');
+    } catch (error) {
+      console.error('Error al actualizar cita:', error);
+      showAlert('Error al modificar cita. Verifica la conexión con el servidor.', 'error');
+    }
+  };
+
+  const cancelCita = async (id) => {
+    try {
+      const result = await Swal.fire({
+        title: '¿Estás seguro de cancelar esta cita?',
+        text: "No podrás revertir esta acción",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, cancelar',
+        cancelButtonText: 'No, mantener'
+      });
+
+      if (result.isConfirmed) {
+        await axios.delete(`${API_URL}/citas/${id}`);
+        refetchCitas();
+        showAlert('Cita cancelada exitosamente', 'success');
+      }
+    } catch (error) {
+      console.error('Error al cancelar cita:', error);
+      showAlert('Error al cancelar cita. Verifica la conexión con el servidor.', 'error');
+    }
+  };
+
+  if (loadingPacientes || loadingCitas) return <div>Loading...</div>;
+  if (errorPacientes || errorCitas) return <div>Error: {errorPacientes || errorCitas}</div>;
+
   return (
-    <div className="container">
-      <div className="dashboard-container">
-        <h1 className="text-3xl font-bold mb-8 text-white">Dashboard de la Clínica</h1>
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold mb-8 text-center">Dashboard de la Clínica</h1>
+      <div className="flex justify-center space-x-4 mb-8">
         <button
-          onClick={() => setIsFormVisible(!isFormVisible)}
-          className="agregar mb-4"
+          onClick={() => setIsPacienteModalOpen(true)}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          {isFormVisible ? 'Cerrar Formulario' : 'Agregar Paciente'}
+          Agregar Paciente
         </button>
-        {isFormVisible && (
-          <div className="mt-8">
-            <PacienteForm onSubmit={addPaciente} medicos={medicos} />
-          </div>
-        )}
-        <PacienteList
-          pacientes={pacientes}
-          onUpdate={updatePaciente}
-          onDelete={deletePaciente}
-          medicos={medicos}
-        />
+        <button
+          onClick={() => setIsCitaModalOpen(true)}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Agregar Cita
+        </button>
       </div>
+
+      <PacienteList
+        pacientes={pacientes}
+        onUpdate={updatePaciente}
+        onDelete={deletePaciente}
+      />
+      <CitaList
+        citas={citas}
+        onUpdate={updateCita}
+        onDelete={cancelCita}
+      />
+
+      <Modal 
+        isOpen={isPacienteModalOpen} 
+        onClose={() => setIsPacienteModalOpen(false)}
+        title="Agregar Paciente"
+      >
+        <PacienteForm onSubmit={(paciente) => {
+          addPaciente(paciente);
+          setIsPacienteModalOpen(false);
+        }} />
+      </Modal>
+
+      <Modal 
+        isOpen={isCitaModalOpen} 
+        onClose={() => setIsCitaModalOpen(false)}
+        title="Agregar Cita"
+      >
+        <CitaForm 
+          onSubmit={(cita) => {
+            addCita(cita);
+            setIsCitaModalOpen(false);
+          }} 
+          pacientes={pacientes} 
+          refetchPacientes={refetchPacientes}
+        />
+      </Modal>
     </div>
   );
 }
