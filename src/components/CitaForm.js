@@ -1,26 +1,41 @@
 import React, { useState, useEffect } from 'react';
 
-function CitaForm({ onSubmit, pacientes }) {
+function CitaForm({ onSubmit, pacientes, initialCita, isEditing = false }) {
   const [formData, setFormData] = useState({
     paciente: { id: '' },
     fechaCita: '',
     motivo: ''
   });
-
+  
   const [localPacientes, setLocalPacientes] = useState(pacientes);
 
   useEffect(() => {
     setLocalPacientes(pacientes);
   }, [pacientes]);
 
+  useEffect(() => {
+    if (initialCita && isEditing) {
+      setFormData({
+        paciente: initialCita.paciente,
+        fechaCita: initialCita.fechaCita,
+        motivo: initialCita.motivo
+      });
+    }
+  }, [initialCita, isEditing]);
+
   const handleChange = (e) => {
-    if (e.target.name === 'pacienteId') {
-      const pacienteId = parseInt(e.target.value, 10);
-      console.log('ID del paciente seleccionado:', pacienteId);
-      console.log('Lista de pacientes:', localPacientes);
+    if (e.target.name === 'pacienteId' && !isEditing) {
+      const pacienteId = e.target.value;
       
+      if (!pacienteId) {
+        setFormData({
+          ...formData,
+          paciente: { id: '' }
+        });
+        return;
+      }
+
       const pacienteSeleccionado = localPacientes.find(p => p.id === pacienteId);
-      console.log('Paciente seleccionado:', pacienteSeleccionado);
 
       if (pacienteSeleccionado) {
         setFormData({ 
@@ -31,12 +46,6 @@ function CitaForm({ onSubmit, pacientes }) {
             apellido: pacienteSeleccionado.apellido
           } 
         });
-      } else {
-        console.error('No se encontró un paciente con el ID:', pacienteId);
-        setFormData({
-          ...formData,
-          paciente: { id: '' }
-        });
       }
     } else {
       setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -45,7 +54,14 @@ function CitaForm({ onSubmit, pacientes }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    const submitData = {
+      ...formData,
+      paciente: {
+        ...formData.paciente,
+        id: formData.paciente.id.toString()
+      }
+    };
+    onSubmit(submitData);
   };
 
   return (
@@ -54,22 +70,29 @@ function CitaForm({ onSubmit, pacientes }) {
         <label className="block text-white text-sm font-bold mb-2" htmlFor="pacienteId">
           Paciente
         </label>
-        <select
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-50"
-          id="pacienteId"
-          name="pacienteId"
-          value={formData.paciente.id}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Seleccione un paciente</option>
-          {pacientes.map(paciente => (
-            <option key={paciente.id} value={paciente.id}>
-              {paciente.nombre} {paciente.apellido}
-            </option>
-          ))}
-        </select>
+        {isEditing ? (
+          <div className="text-white text-sm p-2 bg-gray-700 rounded">
+            {formData.paciente.nombre} {formData.paciente.apellido}
+          </div>
+        ) : (
+          <select
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-50"
+            id="pacienteId"
+            name="pacienteId"
+            value={formData.paciente.id}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Seleccione un paciente</option>
+            {localPacientes && localPacientes.map(paciente => (
+              <option key={paciente.id} value={paciente.id}>
+                {paciente.nombre} {paciente.apellido}
+              </option>
+            ))}
+          </select>
+        )}
       </div>
+
       <div className="mb-4">
         <label className="block text-white text-sm font-bold mb-2" htmlFor="fechaCita">
           Fecha de la Cita
@@ -84,6 +107,7 @@ function CitaForm({ onSubmit, pacientes }) {
           required
         />
       </div>
+
       <div className="mb-4">
         <label className="block text-white text-sm font-bold mb-2" htmlFor="motivo">
           Motivo
@@ -97,8 +121,12 @@ function CitaForm({ onSubmit, pacientes }) {
           required
         />
       </div>
-      <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-        Agendar Cita
+
+      <button 
+        type="submit" 
+        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      >
+        {isEditing ? 'Actualizar Cita' : 'Agendar Cita'}
       </button>
     </form>
   );

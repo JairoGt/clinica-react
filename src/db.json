@@ -1,28 +1,6 @@
 {
   "pacientes": [
     {
-      "id": "2",
-      "nombre": "Jairo",
-      "apellido": "cruz",
-      "fechaNacimiento": "2024-10-05",
-      "genero": "Masculino",
-      "direccion": "san jose pinula ciudad",
-      "telefono": "30563000",
-      "correo": "f@g.com",
-      "historialMedico": "d"
-    },
-    {
-      "id": "3",
-      "nombre": "Web php",
-      "apellido": "e",
-      "fechaNacimiento": "2024-10-05",
-      "genero": "Masculino",
-      "direccion": "e",
-      "telefono": "ef",
-      "correo": "f@g.com",
-      "historialMedico": "f"
-    },
-    {
       "id": "4",
       "nombre": "Web php",
       "apellido": "e",
@@ -32,18 +10,29 @@
       "telefono": "ef",
       "correo": "f@g.com",
       "historialMedico": "dsss"
+    },
+    {
+      "id": "5",
+      "nombre": "Danilo",
+      "apellido": "cRuz",
+      "fechaNacimiento": "2024-10-06",
+      "genero": "Otro",
+      "direccion": "san jose pinula ciudad",
+      "telefono": "30563000",
+      "correo": "f@g.com",
+      "historialMedico": "Prueba\n"
     }
   ],
   "citas": [
     {
       "id": "2",
       "paciente": {
-        "id": 4,
-        "nombre": "Web php",
-        "apellido": "e"
+        "id": "5",
+        "nombre": "Danilo",
+        "apellido": "cRuz"
       },
-      "fechaCita": "2024-10-06T06:58",
-      "motivo": "frf"
+      "fechaCita": "2024-10-23T16:11",
+      "motivo": "Dolor de cabeza"
     }
   ]
 }

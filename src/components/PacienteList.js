@@ -1,11 +1,26 @@
+// PacienteList.js
 import React, { useState } from 'react';
 import PacienteForm from './PacienteForm';
+import Modal from './Modal';
 
 function PacienteList({ pacientes, onUpdate, onDelete }) {
-  const [editingId, setEditingId] = useState(null);
+  const [editingPaciente, setEditingPaciente] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleEdit = (paciente) => {
+    setEditingPaciente(paciente);
+    setIsModalOpen(true);
+  };
+
+  const handleUpdate = (updatedPaciente) => {
+    onUpdate(editingPaciente.id, updatedPaciente);
+    setIsModalOpen(false);
+    setEditingPaciente(null);
+  };
 
   return (
     <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg overflow-hidden">
+      <h2 className="text-2xl font-bold text-white mb-4 px-6 py-4">Lista de Pacientes</h2>
       <table className="min-w-full divide-y divide-gray-200 divide-opacity-25">
         <thead className="bg-white bg-opacity-20">
           <tr>
@@ -37,7 +52,7 @@ function PacienteList({ pacientes, onUpdate, onDelete }) {
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <button 
-                  onClick={() => setEditingId(paciente.id)} 
+                  onClick={() => handleEdit(paciente)} 
                   className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mr-2 transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
                 >
                   Editar
@@ -53,18 +68,24 @@ function PacienteList({ pacientes, onUpdate, onDelete }) {
           ))}
         </tbody>
       </table>
-      {editingId && (
-        <div className="mt-8 p-6 bg-white bg-opacity-10 rounded-lg">
-          <h3 className="text-xl font-medium leading-6 text-white mb-4">Editar Paciente</h3>
-          <PacienteForm
-            paciente={pacientes.find(p => p.id === editingId)}
-            onSubmit={(updatedPaciente) => {
-              onUpdate(editingId, updatedPaciente);
-              setEditingId(null);
-            }}
-          />
+
+      <Modal 
+        isOpen={isModalOpen} 
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingPaciente(null);
+        }}
+      >
+        <div className="p-4">
+          <h2 className="text-xl font-bold mb-4 text-white">Editar Paciente</h2>
+          {editingPaciente && (
+            <PacienteForm
+              paciente={editingPaciente}
+              onSubmit={handleUpdate}
+            />
+          )}
         </div>
-      )}
+      </Modal>
     </div>
   );
 }

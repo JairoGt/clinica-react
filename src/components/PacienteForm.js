@@ -1,3 +1,4 @@
+// PacienteForm.js
 import React, { useState } from 'react';
 
 function PacienteForm({ onSubmit, paciente }) {
@@ -22,37 +23,39 @@ function PacienteForm({ onSubmit, paciente }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg px-8 pt-6 pb-8 mb-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre</label>
+        <label htmlFor="nombre" className="block text-sm font-medium text-white">Nombre</label>
         <input
           type="text"
           name="nombre"
           id="nombre"
           value={formData.nombre}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white bg-opacity-90"
           required
         />
       </div>
+
       <div>
-        <label htmlFor="apellido" className="block text-sm font-medium text-gray-700">Apellido</label>
+        <label htmlFor="apellido" className="block text-sm font-medium text-white">Apellido</label>
         <input
           type="text"
           name="apellido"
           id="apellido"
           value={formData.apellido}
           onChange={handleChange}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white bg-opacity-90"
           required
         />
       </div>
-      <div className="mb-4">
-        <label className="block text-white text-sm font-bold mb-2" htmlFor="fechaNacimiento">
+
+      <div>
+        <label className="block text-sm font-medium text-white" htmlFor="fechaNacimiento">
           Fecha de Nacimiento
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-50"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white bg-opacity-90"
           id="fechaNacimiento"
           name="fechaNacimiento"
           type="date"
@@ -61,12 +64,13 @@ function PacienteForm({ onSubmit, paciente }) {
           required
         />
       </div>
-      <div className="mb-4">
-        <label className="block text-white text-sm font-bold mb-2" htmlFor="genero">
+
+      <div>
+        <label className="block text-sm font-medium text-white" htmlFor="genero">
           Género
         </label>
         <select
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-50"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white bg-opacity-90"
           id="genero"
           name="genero"
           value={formData.genero}
@@ -79,12 +83,13 @@ function PacienteForm({ onSubmit, paciente }) {
           <option value="Otro">Otro</option>
         </select>
       </div>
-      <div className="mb-4">
-        <label className="block text-white text-sm font-bold mb-2" htmlFor="direccion">
+
+      <div>
+        <label className="block text-sm font-medium text-white" htmlFor="direccion">
           Dirección
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-50"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white bg-opacity-90"
           id="direccion"
           name="direccion"
           type="text"
@@ -93,12 +98,13 @@ function PacienteForm({ onSubmit, paciente }) {
           required
         />
       </div>
-      <div className="mb-4">
-        <label className="block text-white text-sm font-bold mb-2" htmlFor="telefono">
+
+      <div>
+        <label className="block text-sm font-medium text-white" htmlFor="telefono">
           Teléfono
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-50"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white bg-opacity-90"
           id="telefono"
           name="telefono"
           type="tel"
@@ -107,12 +113,13 @@ function PacienteForm({ onSubmit, paciente }) {
           required
         />
       </div>
-      <div className="mb-4">
-        <label className="block text-white text-sm font-bold mb-2" htmlFor="correo">
+
+      <div>
+        <label className="block text-sm font-medium text-white" htmlFor="correo">
           Correo Electrónico
         </label>
         <input
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-50"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white bg-opacity-90"
           id="correo"
           name="correo"
           type="email"
@@ -121,22 +128,25 @@ function PacienteForm({ onSubmit, paciente }) {
           required
         />
       </div>
-      <div className="mb-4">
-        <label className="block text-white text-sm font-bold mb-2" htmlFor="historialMedico">
+
+      <div>
+        <label className="block text-sm font-medium text-white" htmlFor="historialMedico">
           Historial Médico
         </label>
         <textarea
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-50"
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white bg-opacity-90"
           id="historialMedico"
           name="historialMedico"
           value={formData.historialMedico}
           onChange={handleChange}
+          rows="4"
           required
         />
       </div>
-      <div className="flex items-center justify-between">
+
+      <div className="flex justify-end pt-4">
         <button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
           type="submit"
         >
           {paciente ? 'Actualizar' : 'Agregar'} Paciente

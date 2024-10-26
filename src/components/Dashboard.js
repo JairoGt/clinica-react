@@ -34,7 +34,9 @@ function Dashboard() {
 
   const addPaciente = async (pacienteData) => {
     try {
-      const newId = pacientes.length > 0 ? Math.max(...pacientes.map(p => p.id)) + 1 : 1;
+      const newId = pacientes.length > 0 
+        ? (Math.max(...pacientes.map(p => parseInt(p.id))) + 1).toString()
+        : "1";
       const newPaciente = { ...pacienteData, id: newId };
       await axios.post(`${API_URL}/pacientes`, newPaciente);
       refetchPacientes();
@@ -47,7 +49,12 @@ function Dashboard() {
 
   const updatePaciente = async (id, updatedPaciente) => {
     try {
-      await axios.put(`${API_URL}/pacientes/${id}`, updatedPaciente);
+      // Asegurarse de que el ID se mantenga como string
+      const pacienteToUpdate = {
+        ...updatedPaciente,
+        id: id.toString()
+      };
+      await axios.put(`${API_URL}/pacientes/${id}`, pacienteToUpdate);
       await refetchPacientes();
       showAlert('Paciente modificado exitosamente', 'success');
     } catch (error) {
@@ -55,6 +62,7 @@ function Dashboard() {
       showAlert('Error al modificar paciente. Verifica la conexión con el servidor.', 'error');
     }
   };
+  
 
 
   const deletePaciente = async (id) => {
@@ -83,8 +91,17 @@ function Dashboard() {
 
   const addCita = async (citaData) => {
     try {
-      const newId = citas.length > 0 ? Math.max(...citas.map(c => c.id)) + 1 : 1;
-      const newCita = { ...citaData, id: newId };
+      const newId = citas.length > 0 
+        ? (Math.max(...citas.map(c => parseInt(c.id))) + 1).toString()
+        : "1";
+      const newCita = { 
+        ...citaData,
+        id: newId,
+        paciente: {
+          ...citaData.paciente,
+          id: citaData.paciente.id.toString()
+        }
+      };
       await axios.post(`${API_URL}/citas`, newCita);
       refetchCitas();
       showAlert('Cita agregada exitosamente', 'success');
@@ -96,7 +113,15 @@ function Dashboard() {
 
   const updateCita = async (id, updatedCita) => {
     try {
-      await axios.put(`${API_URL}/citas/${id}`, updatedCita);
+      const citaToUpdate = {
+        ...updatedCita,
+        id: id.toString(),
+        paciente: {
+          ...updatedCita.paciente,
+          id: updatedCita.paciente.id.toString()
+        }
+      };
+      await axios.put(`${API_URL}/citas/${id}`, citaToUpdate);
       refetchCitas();
       showAlert('Cita modificada exitosamente', 'success');
     } catch (error) {
@@ -155,11 +180,12 @@ function Dashboard() {
         onUpdate={updatePaciente}
         onDelete={deletePaciente}
       />
-      <CitaList
-        citas={citas}
-        onUpdate={updateCita}
-        onDelete={cancelCita}
-      />
+<CitaList
+  citas={citas}
+  onUpdate={updateCita}
+  onDelete={cancelCita}
+  pacientes={pacientes} // Añade esta prop
+/>
 
       <Modal 
         isOpen={isPacienteModalOpen} 
