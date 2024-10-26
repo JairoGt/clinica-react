@@ -5,7 +5,7 @@ function PacienteForm({ onSubmit, paciente }) {
   const [formData, setFormData] = useState(paciente || {
     nombre: '',
     apellido: '',
-    fechaNacimiento: '',
+    fecha_nacimiento: '',
     genero: '',
     direccion: '',
     telefono: '',
@@ -14,10 +14,21 @@ function PacienteForm({ onSubmit, paciente }) {
   });
 
   const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(`Campo ${name} cambiado a:`, value);
+    setFormData(prev => {
+      const newData = { ...prev, [name]: value };
+      console.log('Nuevo estado del formulario:', newData);
+      return newData;
+    });
     setFormData({ ...formData, [e.target.name]: e.target.value });
+
+
   };
 
   const handleSubmit = (e) => {
+    console.log('Datos del formulario antes de enviar:', formData);
+    console.log('Fecha específicamente:', formData.fecha_nacimiento);
     e.preventDefault();
     onSubmit(formData);
   };
@@ -51,15 +62,15 @@ function PacienteForm({ onSubmit, paciente }) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-white" htmlFor="fechaNacimiento">
+        <label className="block text-sm font-medium text-white" htmlFor="fecha_nacimiento">
           Fecha de Nacimiento
         </label>
         <input
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50 bg-white bg-opacity-90"
-          id="fechaNacimiento"
-          name="fechaNacimiento"
+          id="fecha_nacimiento"
+          name="fecha_nacimiento"
           type="date"
-          value={formData.fechaNacimiento}
+          value={formData.fecha_nacimiento}
           onChange={handleChange}
           required
         />

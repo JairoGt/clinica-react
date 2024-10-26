@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
 import CitaForm from './CitaForm';
-
 function CitaList({ citas, onUpdate, onDelete, pacientes }) {
   const [editingCita, setEditingCita] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -12,67 +11,65 @@ function CitaList({ citas, onUpdate, onDelete, pacientes }) {
   };
 
   const handleUpdate = (updatedData) => {
-    const updatedCita = {
-      ...updatedData,
-      id: editingCita.id
-    };
-    onUpdate(editingCita.id, updatedCita);
+    onUpdate(editingCita.id, updatedData);
     setIsModalOpen(false);
     setEditingCita(null);
   };
 
   return (
-    <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg overflow-hidden mt-8">
-      <h2 className="text-2xl font-bold text-white mb-4 px-6 py-4">Citas Programadas</h2>
-      <table className="min-w-full divide-y divide-gray-200 divide-opacity-25">
-        <thead className="bg-white bg-opacity-20">
-          <tr>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">ID Cita</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Paciente</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Fecha</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Motivo</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Acciones</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white bg-opacity-10 divide-y divide-gray-200 divide-opacity-25">
-          {citas.map(cita => (
-            <tr key={cita.id}>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium text-white">{cita.id || 'N/A'}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium text-white">
+    <div className="table-container">
+      <div className="section-header">
+        <h2 className="text-2xl font-bold text-white">Citas Programadas</h2>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="dashboard-table">
+          <thead>
+            <tr>
+              <th>ID Cita</th>
+              <th>Paciente</th>
+              <th>Fecha</th>
+              <th>Motivo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {citas.map(cita => (
+              <tr key={cita.id}>
+                <td>{cita.id || 'N/A'}</td>
+                <td>
                   {cita.paciente && (cita.paciente.nombre || cita.paciente.apellido) 
                     ? `${cita.paciente.nombre || ''} ${cita.paciente.apellido || ''}`.trim()
                     : 'Paciente no especificado'}
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-white">
+                </td>
+                <td>
                   {cita.fechaCita ? new Date(cita.fechaCita).toLocaleString() : 'Fecha no especificada'}
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-white">{cita.motivo || 'Motivo no especificado'}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <button 
-                  onClick={() => handleEdit(cita)}
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mr-2 transition duration-300"
-                >
-                  Editar
-                </button>
-                <button 
-                  onClick={() => onDelete(cita.id)}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300"
-                >
-                  Cancelar
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                </td>
+                <td>{cita.motivo || 'Motivo no especificado'}</td>
+                <td>
+                  <button 
+                    onClick={() => handleEdit(cita)}
+                    className="table-button table-button-edit"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    Editar
+                  </button>
+                  <button 
+                    onClick={() => onDelete(cita.id)}
+                    className="table-button table-button-delete"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Cancelar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <Modal 
         isOpen={isModalOpen} 
@@ -81,8 +78,8 @@ function CitaList({ citas, onUpdate, onDelete, pacientes }) {
           setEditingCita(null);
         }}
       >
-        <div className="p-4">
-          <h2 className="text-xl font-bold mb-4 text-white">Editar Cita</h2>
+        <div className="p-6">
+          <h2 className="text-2xl font-bold text-white mb-6">Editar Cita</h2>
           {editingCita && (
             <CitaForm
               onSubmit={handleUpdate}
@@ -96,5 +93,4 @@ function CitaList({ citas, onUpdate, onDelete, pacientes }) {
     </div>
   );
 }
-
 export default CitaList;

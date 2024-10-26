@@ -19,55 +19,59 @@ function PacienteList({ pacientes, onUpdate, onDelete }) {
   };
 
   return (
-    <div className="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg overflow-hidden">
-      <h2 className="text-2xl font-bold text-white mb-4 px-6 py-4">Lista de Pacientes</h2>
-      <table className="min-w-full divide-y divide-gray-200 divide-opacity-25">
-        <thead className="bg-white bg-opacity-20">
-          <tr>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">ID</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Nombre</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Apellido</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Fecha de Nacimiento</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Correo</th>
-            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Acciones</th>
-          </tr>
-        </thead>
-        <tbody className="bg-white bg-opacity-10 divide-y divide-gray-200 divide-opacity-25">
-          {pacientes.map(paciente => (
-            <tr key={paciente.id}>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium text-white">{paciente.id}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm font-medium text-white">{paciente.nombre}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-white">{paciente.apellido}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-white">{paciente.fechaNacimiento}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-white">{paciente.correo}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <button 
-                  onClick={() => handleEdit(paciente)} 
-                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mr-2 transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
-                >
-                  Editar
-                </button>
-                <button 
-                  onClick={() => onDelete(paciente.id)} 
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-1"
-                >
-                  Eliminar
-                </button>
-              </td>
+    <div className="table-container">
+      <div className="section-header">
+        <h2 className="text-2xl font-bold text-white">Lista de Pacientes</h2>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="dashboard-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Fecha de Nacimiento</th>
+              <th>Correo</th>
+              <th>Acciones</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {pacientes.map(paciente => (
+              <tr key={paciente.id}>
+                <td>{paciente.id}</td>
+                <td>{paciente.nombre}</td>
+                <td>{paciente.apellido}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-white/90">
+  {paciente.fecha_nacimiento ? 
+    new Date(paciente.fecha_nacimiento + 'T00:00:00').toLocaleDateString() 
+    : 'No especificada'}
+</td>
+                <td>{paciente.correo}</td>
+                <td>
+                  <button 
+                    onClick={() => handleEdit(paciente)} 
+                    className="table-button table-button-edit"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                    </svg>
+                    Editar
+                  </button>
+                  <button 
+                    onClick={() => onDelete(paciente.id)} 
+                    className="table-button table-button-delete"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <Modal 
         isOpen={isModalOpen} 
@@ -76,8 +80,8 @@ function PacienteList({ pacientes, onUpdate, onDelete }) {
           setEditingPaciente(null);
         }}
       >
-        <div className="p-4">
-          <h2 className="text-xl font-bold mb-4 text-white">Editar Paciente</h2>
+        <div className="p-6">
+          <h2 className="text-2xl font-bold text-white mb-6">Editar Paciente</h2>
           {editingPaciente && (
             <PacienteForm
               paciente={editingPaciente}

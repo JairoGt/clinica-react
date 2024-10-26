@@ -24,7 +24,7 @@ function CitaForm({ onSubmit, pacientes, initialCita, isEditing = false }) {
   }, [initialCita, isEditing]);
 
   const handleChange = (e) => {
-    if (e.target.name === 'pacienteId' && !isEditing) {
+    if (e.target.name === 'pacienteId') {
       const pacienteId = e.target.value;
       
       if (!pacienteId) {
@@ -35,7 +35,8 @@ function CitaForm({ onSubmit, pacientes, initialCita, isEditing = false }) {
         return;
       }
 
-      const pacienteSeleccionado = localPacientes.find(p => p.id === pacienteId);
+      // Convertir el id a número para la comparación
+      const pacienteSeleccionado = localPacientes.find(p => p.id === parseInt(pacienteId));
 
       if (pacienteSeleccionado) {
         setFormData({ 
@@ -54,14 +55,8 @@ function CitaForm({ onSubmit, pacientes, initialCita, isEditing = false }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const submitData = {
-      ...formData,
-      paciente: {
-        ...formData.paciente,
-        id: formData.paciente.id.toString()
-      }
-    };
-    onSubmit(submitData);
+    console.log('Datos a enviar:', formData); // Para depuración
+    onSubmit(formData);
   };
 
   return (
@@ -79,7 +74,7 @@ function CitaForm({ onSubmit, pacientes, initialCita, isEditing = false }) {
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-white bg-opacity-50"
             id="pacienteId"
             name="pacienteId"
-            value={formData.paciente.id}
+            value={formData.paciente.id || ''}
             onChange={handleChange}
             required
           >
